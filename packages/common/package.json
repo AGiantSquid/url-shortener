@@ -1,5 +1,5 @@
 {
-  "name": "@yarn-ts-monorepo/common",
+  "name": "@url-shortener/common",
   "version": "1.0.0",
   "private": true,
   "type": "module",

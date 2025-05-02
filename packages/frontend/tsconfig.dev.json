@@ -3,7 +3,7 @@
   "compilerOptions": {
     "rootDir": null, // ⛔ override rootDir value in base ./tsconfig.json to allow referencing common outside of src
     "paths": {
-      "@yarn-ts-monorepo/common/*": ["../common/src/*"]
+      "@url-shortener/common/*": ["../common/src/*"]
     }
   },
   "include": [

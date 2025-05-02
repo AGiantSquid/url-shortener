@@ -1,10 +1,13 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
-import { Message } from '@yarn-ts-monorepo/common/types/message';
-import { __TEST_CONSTANT__ } from '@yarn-ts-monorepo/common/constants/debug';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import urlRoutes from './routes/url.routes.js';
+import { redirectToOriginalUrl } from './controllers/url.controller.js';
 
 const app = express();
 const port = 5000;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Middleware
 app.use(
@@ -15,17 +18,24 @@ app.use(
 );
 app.use(express.json());
 
-// Demo endpoint
-app.get('/api/messages', (req: Request, res: Response) => {
-  const message: Message = {
-    id: '1',
-    content: `Displaying value from common package to verify reloading on the backend works: ${__TEST_CONSTANT__}`,
-    timestamp: new Date().toISOString(),
-    author: 'System',
-  };
-  res.json(message);
+// Serve static frontend files for the 404 page
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Set up EJS for the 404 page
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+// API Routes
+app.use(urlRoutes);
+
+// Redirect route for shortened URLs
+app.get('/:slug', redirectToOriginalUrl);
+
+// 404 Page - Should be after all other routes
+app.use((req: Request, res: Response) => {
+  res.status(404).render('404', { message: 'Page not found' });
 });
 
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`URL Shortener server is running on port ${port}`);
 });

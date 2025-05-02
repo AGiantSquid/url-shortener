@@ -6,12 +6,13 @@ ENV VITE_BACKEND_API_URL=$BACKEND_API_URL
 
 WORKDIR /app
 
+# Install OpenSSL for Prisma
+RUN apk add --no-cache openssl
+
 COPY . .
 
 RUN rm -f /usr/local/bin/yarn /usr/local/bin/yarnpkg
 
 RUN corepack enable && corepack prepare --activate && yarn install
-
-RUN yarn build
 
 CMD ["yarn", "dev"]

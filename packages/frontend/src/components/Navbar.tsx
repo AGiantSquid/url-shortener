@@ -42,7 +42,7 @@ const Navbar = () => {
               margin: 0,
             }}
           >
-            Your App
+            URL Shortener
           </h1>
         </div>
       </div>

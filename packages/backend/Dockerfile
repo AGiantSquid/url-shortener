@@ -2,6 +2,9 @@ FROM node:18-alpine
 
 WORKDIR /app
 
+# Install OpenSSL for Prisma
+RUN apk add --no-cache openssl
+
 # # Copy only package manifests first for caching
 COPY package.json tsconfig.json .yarnrc.yml ./
 

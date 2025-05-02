@@ -1,38 +1,55 @@
-# Yarn TypeScript Monorepo
+# URL Shortener
 
-A monorepo template using Yarn workspaces and TypeScript, featuring a shared common package, backend API, and frontend application.
-This supports hot reloading (even for shared packages) for development.
+A full-stack URL shortener application that allows users to create shortened versions of long URLs.
+
+## Features
+
+- Shorten any valid URL
+- Copy shortened URLs to clipboard
+- Redirect from shortened URLs to original URLs
+- View a list of all shortened URLs
+- Track number of visits to each shortened URL
+- Custom 404 page for invalid slugs
+
+## Tech Stack
+
+- **Frontend:** React, TypeScript, Tailwind CSS
+- **Backend:** Node.js, Express.js, TypeScript
+- **Database:** PostgreSQL with Prisma ORM
+- **Deployment:** Docker
 
 ## Project Structure
 
+This is a monorepo using Yarn workspaces:
+
 ```
-yarn-ts-monorepo/
+url-shortener/
 ├── packages/
-│   ├── common/          # Shared types and utilities
-│   ├── backend/         # Express.js API server
-│   └── frontend/        # React frontend application
-├── package.json         # Root package.json
-├── tsconfig.json        # Root TypeScript configuration
-└── docker-compose.yml   # Docker Compose configuration
+│   ├── backend/       # Express.js API
+│   ├── frontend/      # React app
+│   └── common/        # Shared types/utilities
+├── docker-compose.yml
+└── README.md
 ```
+
+## Getting Started
 
 ## Prerequisites
 
 - Docker
 - Docker Compose
 
-## Getting Started
+### Installation
 
 1. Clone the repository:
+   ```sh
+   git clone https://github.com/agiantsquid/url-shortener.git
+   cd url-shortener
+   ```
 
-```bash
-git clone <repository-url>
-cd yarn-ts-monorepo
-```
+### Development
 
-## Development
-
-This repo supports running in development mode, which supports hot reloading of the front-end and backend.
+1. This repo supports running in development mode, which supports hot reloading of the front-end and backend.
 
 ```bash
 docker compose --profile dev up --build
@@ -56,37 +73,8 @@ This will start:
 - Frontend: http://localhost:3000
 - Backend API: http://localhost:5000
 
-### Common Package
+## API Endpoints
 
-The common package contains shared types and utilities used by both the frontend and backend.
-
-### Backend
-
-The backend is an Express.js server that provides a REST API. Features:
-
-- TypeScript support
-- CORS enabled for frontend development
-- Shared types from common package
-
-### Frontend
-
-The frontend is a React application built with Vite. Features:
-
-- TypeScript support
-- React Router for navigation
-- Shared types from common package
-
-## Available Scripts
-
-### Docker Compose
-
-- `docker compose --profile dev up` - Start up development container
-- `docker compose --profile dev up --build` - Rebuild and start development container
-- `docker compose --profile prod up` - Start up production containers
-- `docker compose --profile prod up --build` - Rebuild and start up production container
-- `docker compose down` - Stop all services
-
-## TypeScript Configuration
-
-The project uses a base TypeScript configuration in the root `tsconfig.json` that is extended by each package.
-This ensures consistent TypeScript settings across the monorepo.
+- `POST /api/urls` - Create a shortened URL
+- `GET /api/urls` - Get all URLs
+- `GET /:slug` - Redirect to the original URL

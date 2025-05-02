@@ -1,84 +1,71 @@
-import React, { useEffect, useState } from 'react';
-import { Message } from '@yarn-ts-monorepo/common/types/message';
-import { __TEST_CONSTANT__ } from '@yarn-ts-monorepo/common/constants/debug';
-
-declare const __BACKEND_API_URL__: string;
+import { useState, useEffect } from 'react';
+import UrlForm from '../components/UrlForm';
+import UrlResult from '../components/UrlResult';
+import UrlList from '../components/UrlList';
+import { Url, CreateUrlResponse } from '@url-shortener/common/types/url';
 
 const Home = () => {
-  const [message, setMessage] = useState<Message | null>(null);
+  const [newUrl, setNewUrl] = useState<CreateUrlResponse | null>(null);
+  const [urls, setUrls] = useState<Url[]>([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchMessage = async () => {
+    fetchUrls();
+  }, []);
+
+  const fetchUrls = async () => {
       try {
-        const response = await fetch(`${__BACKEND_API_URL__}/api/messages`);
+      setLoading(true);
+      setError(null);
+
+      const response = await fetch('http://localhost:5000/api/urls');
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch URLs');
+      }
+
         const data = await response.json();
-        setMessage(data);
+      setUrls(data);
       } catch (err) {
-        setError('Failed to fetch message');
+      setError('Failed to load URLs. Please try again later.');
+      console.error(err);
+    } finally {
+      setLoading(false);
       }
     };
 
-    fetchMessage();
-  }, []);
+  const handleUrlCreated = (url: CreateUrlResponse) => {
+    setNewUrl(url);
+    fetchUrls(); // Refresh the list
+  };
 
   return (
-    <div style={{ maxWidth: '800px', margin: '2rem auto', padding: '0 1rem' }}>
-      <div
-        style={{
-          padding: '2rem',
-          marginBottom: '2rem',
-          backgroundColor: '#ffffff',
-          borderRadius: '4px',
-          border: '1px solid #e0e0e0',
-        }}
-      >
-        <h2
-          style={{
-            color: '#333333',
-            fontSize: '1.5rem',
-            marginBottom: '1rem',
-          }}
-        >
-          Welcome!
-        </h2>
-        <p>
-          Displaying value from common package to verify reloading on the
-          frontend works: {__TEST_CONSTANT__}
+    <div className="container mx-auto px-4 py-8">
+      <div className="max-w-4xl mx-auto">
+        <header className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-blue-600">URL Shortener</h1>
+          <p className="text-gray-600 mt-2">
+            Create short, memorable links from long URLs
         </p>
-        <div
-          style={{
-            color: '#666666',
-            fontSize: '1rem',
-            lineHeight: '1.5',
-          }}
-        >
-          {error ? (
-            <p style={{ color: '#dc3545' }}>{error}</p>
-          ) : message ? (
-            <div
-              style={{
-                padding: '1rem',
-                backgroundColor: '#f8f9fa',
-                borderRadius: '4px',
-                marginBottom: '1rem',
-              }}
-            >
-              <p>
-                <strong>Message:</strong> {message.content}
-              </p>
-              <p>
-                <strong>Author:</strong> {message.author}
-              </p>
-              <p>
-                <strong>Time:</strong>{' '}
-                {new Date(message.timestamp).toLocaleString()}
-              </p>
+        </header>
+
+        <UrlForm onUrlCreated={handleUrlCreated} />
+
+        {newUrl && <UrlResult url={newUrl} />}
+
+        {loading ? (
+          <div className="mt-8 text-center">
+            <div className="animate-spin inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full"></div>
+            <p className="mt-2 text-gray-600">Loading URLs...</p>
+          </div>
+        ) : error ? (
+          <div className="mt-8 p-4 bg-red-100 text-red-700 rounded">
+            {error}
             </div>
           ) : (
-            <p>Loading message...</p>
+          <UrlList urls={urls} />
           )}
-        </div>
       </div>
     </div>
   );

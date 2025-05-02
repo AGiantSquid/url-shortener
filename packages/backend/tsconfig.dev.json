@@ -2,7 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "paths": {
-      "@yarn-ts-monorepo/common/*": ["../common/src/*"]
+      "@url-shortener/common/*": ["../common/src/*"]
     }
   }
 }
