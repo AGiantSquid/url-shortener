@@ -1,0 +1,37 @@
+services:
+  dev:
+    profiles: ["dev"]
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      args:
+        BACKEND_API_URL: http://localhost:5000
+    volumes:
+      - .:/app
+    ports:
+      - "5000:5000" # Express backend
+      - "3000:3000" # React frontend
+    environment:
+      - FRONTEND_URL=http://localhost:3000
+
+  frontend:
+    profiles: ["prod"]
+    build:
+      context: .
+      dockerfile: ./packages/frontend/Dockerfile
+      args:
+        BACKEND_API_URL: http://localhost:5000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  backend:
+    profiles: ["prod"]
+    build:
+      context: .
+      dockerfile: ./packages/backend/Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - FRONTEND_URL=http://localhost:3000

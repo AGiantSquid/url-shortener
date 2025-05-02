@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "types": ["vite/client", "node"],
+    "noEmit": true,
+    "moduleResolution": "nodenext",
+    "allowImportingTsExtensions": true,
+    "jsx": "react-jsx"
+  },
+  "include": ["src"],
+  "references": [{ "path": "../common" }]
+}

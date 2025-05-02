@@ -1,0 +1,25 @@
+{
+  "name": "@yarn-ts-monorepo/common",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "clean": "rimraf dist tsconfig.tsbuildinfo node_modules",
+    "reset": "rimraf node_modules && yarn clean"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    "./*": "./dist/*.js"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@types/node": "^18.15.11",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.4"
+  }
+}

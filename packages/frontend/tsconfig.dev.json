@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": null, // ⛔ override rootDir value in base ./tsconfig.json to allow referencing common outside of src
+    "paths": {
+      "@yarn-ts-monorepo/common/*": ["../common/src/*"]
+    }
+  },
+  "include": [
+    "src", // your local frontend code
+    "../common/src" // add this line
+  ]
+}
